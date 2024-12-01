@@ -1,0 +1,70 @@
+<div class="container mt-4">
+
+   <%= render 'search' %>
+
+   <h1 class="mb-4">Product Listings</h1>
+
+   <div class="row">
+
+     <% if @products.present? %>
+       <div class="col-md-4 mb-4">
+             <div class="card h-100" data-toggle="modal" data-target="#addProductModal">
+                 <div class="card-body text-center">
+                     <h5 class="card-title">Add New Product</h5>
+                     <p class="card-text">Click to add a new product</p>
+                     <span class="plus-symbol">+</span>
+                 </div>
+             </div>
+         </div>
+     <% end %>
+
+     <% @products.each do |product| %>
+       <div class="col-md-4 mb-4">
+         <div class="card h-100">
+           <img src="<%= product.image %>" class="card-img-top image-fixed" alt="<%= product.title %>">
+           <div class="card-body">
+             <h5 class="card-title"><%= product.title %></h5>
+             <p class="card-text" id="description<%= product.id %>">
+               <%= truncate(product.description, length: 100) %>
+               <!-- Clickable "See More" text -->
+               <span class="text-primary see-more" data-toggle="modal" data-target="#exampleModal<%= product.id %>">
+                 See More
+               </span>
+             </p>
+             <p class="card-text"><strong>Price:</strong> $<%= product.price %></p>
+             <p class="card-text"><strong>Category:</strong> <%= product.category %></p>
+           </div>
+         </div>
+
+         <!-- Modal -->
+         <div class="modal fade" id="exampleModal<%= product.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+           <div class="modal-dialog" role="document">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <img src="<%= product.image %>" class="modal-image image-fixed" alt="<%= product.title %>">
+                 <h5 class="modal-title ml-2" id="exampleModalLabel"><%= product.title %></h5>
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                 </button>
+               </div>
+               <div class="modal-body">
+                 <p><%= product.description %></p>
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     <% end %>
+   </div>
+ </div>
+
+
+
+ <!-- Add Product Modal -->
+ <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+   <!-- Modal content for adding a new product goes here -->
+   <%= render 'add_product_modal' %>
+ </div>

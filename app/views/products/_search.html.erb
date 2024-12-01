@@ -1,0 +1,54 @@
+<% min_price = params[:min_price].presence || 0%>
+<% max_price = params[:max_price].presence || 1000%>
+
+<%= form_tag(products_path, method: 'get') do %>
+    <div class="row align-items-center">
+      <!-- Search input -->
+      <div class="col-md-3 mb-3">
+        <%= text_field_tag :q, params[:q], class: 'form-control', placeholder: 'Search...' %>
+      </div>
+      
+      <!-- Category dropdown -->
+      <div class="col-md-3 mb-3">
+        <%= select_tag :category, options_for_select(['Select Category'] + Product.distinct.pluck(:category), params[:category]), class: 'form-control' %>
+      </div>
+      
+      <!-- Price Range -->
+      <div class="col-md-1 mb-3">
+        <label for="multi" class="mt-2">Price Range:</label>
+      </div>
+      
+      <!-- Multi-range slider -->
+      <div class="col-md-3 mb-3">
+        <input type="text" class="js-range-slider" name="my_range" value="" />
+        <%= hidden_field_tag :min_price, '', id: 'min_price_hidden' %>
+        <%= hidden_field_tag :max_price, '', id: 'max_price_hidden' %>
+      </div>
+      
+      <!-- Submit button -->
+      <div class="col-md-2 mb-3">
+        <%= submit_tag 'Search', class: 'btn btn-primary btn-block' %>
+      </div>
+    </div>
+  <% end %>
+  
+  <script>
+    $(".js-range-slider").ionRangeSlider({
+      type: "double",
+      min: 0,
+      max: 1000,
+      from: <%= min_price %>,
+      to: <%= max_price %>,
+      grid: true,
+    });
+  
+    $(".js-range-slider").on("change", function () {
+      var $this = $(this),
+          value = $this.prop("value").split(";");
+      var minPrice = value[0];
+      var maxPrice = value[1];
+  
+      $("#min_price_hidden").val(minPrice);
+      $("#max_price_hidden").val(maxPrice);
+    });
+  </script>
